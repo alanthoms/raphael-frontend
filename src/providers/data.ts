@@ -1,44 +1,45 @@
-/*import { createSimpleRestDataProvider } from "@refinedev/rest/simple-rest";
-import { API_URL } from "./constants";
-import { DataProvider } from "@refinedev/core";
-export const { dataProvider, kyInstance } = createSimpleRestDataProvider({
-  apiURL: API_URL,
-});
- **/
+import { CreateDataProviderOptions, createDataProvider } from "@refinedev/rest";
+import { BACKEND_BASE_URL } from "../constants";
+import { ListResponse } from "@/types";
 
-import {
-  DataProvider,
-  BaseRecord,
-  GetListParams,
-  GetListResponse,
-} from "@refinedev/core";
-import { MOCK_ACPS } from "./constants";
+if (!BACKEND_BASE_URL) {
+  throw new Error("BACKEND_BASE_URL is not defined in environment variables");
+}
 
-export const dataProvider: DataProvider = {
-  //get list fetches all record used by usetable and other components to display lists of data, it accepts a resource name and parameters for pagination, sorting, and filtering
-  getList: async <TData extends BaseRecord = BaseRecord>({
-    resource,
-  }: GetListParams): Promise<GetListResponse<TData>> => {
-    if (resource !== "acps") {
-      return { data: [] as TData[], total: 0 };
-    }
-    return {
-      data: MOCK_ACPS as unknown as TData[],
-      total: MOCK_ACPS.length,
-    };
-  },
-  getOne: async () => {
-    throw new Error("This function not present");
-  },
-  create: async () => {
-    throw new Error("This function not present");
-  },
-  update: async () => {
-    throw new Error("This function not present");
-  },
-  deleteOne: async () => {
-    throw new Error("This function not present");
-  },
+const options: CreateDataProviderOptions = {
+  getList: {
+    getEndpoint: ({ resource }) => `${resource}`,
 
-  getApiUrl: () => "",
+    buildQueryParams: async ({ resource, pagination, filters }) => {
+      const page = pagination?.currentPage ?? 1;
+      const pageSize = pagination?.pageSize ?? 10;
+
+      const params: Record<string, string | number> = { page, limit: pageSize };
+
+      filters?.forEach((filter) => {
+        const field = "field" in filter ? filter.field : "";
+        const value = String(filter.value);
+
+        if (resource === "acps") {
+          if (field === "squadron") params.squadron = value;
+          if (field === "name" || field === "code ") params.search = value;
+        }
+      });
+      return params;
+    },
+
+    mapResponse: async (response) => {
+      // Clone the response to avoid consuming it before the total count is extracted
+      const payload: ListResponse = await response.clone().json();
+      return payload.data ?? [];
+    },
+    getTotalCount: async (response) => {
+      const payload: ListResponse = await response.clone().json();
+      return payload.pagination?.total ?? payload.data?.length ?? 0;
+    },
+  },
 };
+
+const { dataProvider } = createDataProvider(BACKEND_BASE_URL, options);
+
+export { dataProvider };

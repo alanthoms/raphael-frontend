@@ -1,5 +1,3 @@
-export const API_URL = "https://api.fake-rest.refine.dev";
-
 import { ACP } from "@/types";
 
 export const MOCK_ACPS: ACP[] = [

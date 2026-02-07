@@ -71,7 +71,7 @@ const ACPsList = () => {
         },
         {
           id: "squadron",
-          accessorKey: "squadron",
+          accessorKey: "squadron.name",
           size: 150,
           header: () => (
             <p className="flex items-center gap-1 font-bold ml-2">Squadron</p>
