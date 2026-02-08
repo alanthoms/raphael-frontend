@@ -82,7 +82,7 @@ export const commanders = [
   },
 ];
 
-export const acpProfiles = [
+export const acps = [
   {
     id: 1,
     name: "Electronic Warfare",
