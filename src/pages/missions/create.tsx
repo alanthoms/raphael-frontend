@@ -1,7 +1,7 @@
 import { CreateView } from "@/components/refine-ui/views/create-view.tsx";
 import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { useBack } from "@refinedev/core";
+import { useBack, useList } from "@refinedev/core";
 import { Separator } from "@/components/ui/separator.tsx";
 import {
   Card,
@@ -17,7 +17,6 @@ import * as Z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,6 +34,7 @@ import {
 } from "@/components/ui/select.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Loader2 } from "lucide-react";
+import { Acp, User } from "@/types";
 
 const create = () => {
   const back = useBack();
@@ -51,34 +51,46 @@ const create = () => {
   });
 
   const {
+    refineCore: { onFinish },
     handleSubmit,
     formState: { isSubmitting },
     control,
   } = form;
 
-  const onSubmit = (values: Z.infer<typeof missionSchema>) => {
+  const onSubmit = async (values: Z.infer<typeof missionSchema>) => {
     try {
-      console.log(values);
+      await onFinish(values);
     } catch (error) {
       console.error("Error creating mission:", error);
     }
   };
 
-  const commanders = [
-    { id: "1", name: "Commander Alice" },
-    { id: "2", name: "Commander Bob" },
-    { id: "3", name: "Commander Carol" },
-  ];
-
-  const acps = [
-    { id: 1, name: "Electronic Warfare", code: "EW" },
-    {
-      id: 2,
-      name: "Intelligence, Surveillance, Reconnaissance",
-      code: "ISR",
+  const { query: acpsQuery } = useList<Acp>({
+    resource: "acps",
+    pagination: {
+      pageSize: 100,
     },
-    { id: 3, name: "Airborne Early Warning ", code: "AEW" },
-  ];
+  });
+
+  const { query: commandersQuery } = useList<User>({
+    resource: "users",
+    filters: [
+      {
+        field: "role",
+        operator: "eq",
+        value: "commander",
+      },
+    ],
+    pagination: {
+      pageSize: 100,
+    },
+  });
+
+  const acps = acpsQuery?.data?.data || [];
+  const acpsLoading = acpsQuery?.isLoading;
+
+  const commanders = commandersQuery?.data?.data || [];
+  const commandersLoading = commandersQuery?.isLoading;
 
   return (
     <div>
@@ -132,7 +144,7 @@ const create = () => {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <FormField
                       control={control}
-                      name="acpId"
+                      name="acpProfileId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
@@ -144,6 +156,7 @@ const create = () => {
                               field.onChange(Number(value))
                             }
                             value={field?.value?.toString()}
+                            disabled={acpsLoading}
                           >
                             <FormControl>
                               <SelectTrigger className="w-full">
@@ -151,12 +164,12 @@ const create = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {acps.map((acp) => (
+                              {acps.map((acp: Acp) => (
                                 <SelectItem
                                   key={acp.id}
                                   value={acp.id.toString()}
                                 >
-                                  {acp.name} ({acp.code})
+                                  {acp.name}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -193,60 +206,40 @@ const create = () => {
                         </FormItem>
                       )}
                     />
-
-                    <FormField
-                      control={control}
-                      name="commanderId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
-                            Commander <span className="text-orange-600">*</span>
-                          </FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select a teacher" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {commanders.map((commander) => (
-                                <SelectItem
-                                  key={commander.id}
-                                  value={commander.id.toString()}
-                                >
-                                  {commander.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={control}
-                      name="acpId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Asset ID</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              placeholder="Assign ACP ID"
-                              onChange={(e) =>
-                                field.onChange(Number(e.target.value))
-                              }
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
+                  <FormField
+                    control={control}
+                    name="commanderId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Commander <span className="text-orange-600">*</span>
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          disabled={commandersLoading}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select a commander" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {commanders.map((commander) => (
+                              <SelectItem
+                                key={commander.id}
+                                value={commander.id.toString()}
+                              >
+                                {commander.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   {/* Description */}
                   <FormField
                     control={control}

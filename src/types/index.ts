@@ -1,4 +1,4 @@
-export type ACP = {
+export type Acp = {
   id: number;
   name: string;
   code: string;
@@ -105,7 +105,7 @@ export type Deployment = {
   missionName: string;
   bannerUrl?: string;
   bannerCldPubId?: string;
-  acp?: ACP;
+  acp?: Acp;
   commander?: User;
   squadron?: Squadron;
   windows: MissionWindow[];

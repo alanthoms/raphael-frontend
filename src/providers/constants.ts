@@ -1,6 +1,6 @@
-import { ACP } from "@/types";
+import { Acp } from "@/types";
 
-export const MOCK_ACPS: ACP[] = [
+export const MOCK_ACPS: Acp[] = [
   {
     id: 1,
     code: "NYX-A1",

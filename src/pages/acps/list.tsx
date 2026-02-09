@@ -14,7 +14,7 @@ import { SQUADRON_OPTIONS } from "@/constants";
 import { useTable } from "@refinedev/react-table";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
-import { ACP } from "@/types";
+import { Acp } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -44,8 +44,8 @@ const ACPsList = () => {
     : [];
 
   //use table hook from refine on top of react-table to get the table instance, tan stack packaage
-  const acpTable = useTable<ACP>({
-    columns: useMemo<ColumnDef<ACP>[]>( // define columns for the table, useMemo to optimize performance by memoizing the column definitions
+  const acpTable = useTable<Acp>({
+    columns: useMemo<ColumnDef<Acp>[]>( // define columns for the table, useMemo to optimize performance by memoizing the column definitions
       //memoize the column definitions to prevent unnecessary re-renders, only recompute when dependencies change
       () => [
         {

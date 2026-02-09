@@ -25,13 +25,11 @@ export const ROLE_OPTIONS = [
 ];
 
 export const SQUADRONS = [
-  "No. 216 Squadron",
-  "No. 17 Test & Evaluation",
-  "No. 31 Squadron",
-  "No. 54 Squadron",
-  "Leonardo Flight Systems",
-  "RCO Rapid Prototyping Unit",
-  "No. 1 Group Command",
+  "101st Reconnaissance Wing",
+  "502nd Electronic Strike Group",
+  "No. IX (Bomber) Squadron",
+  "V-SQUAD: Rapid Response",
+  "Maritime Guardian Unit",
 ] as const;
 
 export const SQUADRON_OPTIONS = SQUADRONS.map((squadron) => ({
