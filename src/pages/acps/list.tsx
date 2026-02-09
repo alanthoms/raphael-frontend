@@ -49,11 +49,13 @@ const ACPsList = () => {
       //memoize the column definitions to prevent unnecessary re-renders, only recompute when dependencies change
       () => [
         {
-          id: "code",
-          accessorKey: "code",
+          id: "serialNumber",
+          accessorKey: "serialNumber",
           size: 100,
           header: () => (
-            <p className="flex items-center gap-1 font-bold ml-2">Code</p>
+            <p className="flex items-center gap-1 font-bold ml-2">
+              Serial Number
+            </p>
           ),
           cell: ({ getValue }) => <Badge>{getValue<string>()}</Badge>,
         },

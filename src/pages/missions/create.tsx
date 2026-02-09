@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm } from "@refinedev/react-hook-form";
 import { missionSchema } from "@/lib/schema.ts";
 import * as Z from "zod";
 
