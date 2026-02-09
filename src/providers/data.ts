@@ -41,6 +41,11 @@ const options: CreateDataProviderOptions = {
           if (field === "name" || field === "serialNumber" || field === "type")
             params.search = value;
         }
+
+        if (resource === "missions") {
+          if (field === "search" || field === "name") params.search = value;
+          if (field === "commander") params.commander = value;
+        }
       });
       return params;
     },

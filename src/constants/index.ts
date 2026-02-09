@@ -80,6 +80,10 @@ export const commanders = [
   },
 ];
 
+export const COMMANDER_OPTIONS = commanders.map((commander) => ({
+  value: commander,
+  label: commander,
+}));
 export const acps = [
   {
     id: 1,

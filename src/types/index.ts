@@ -95,21 +95,21 @@ export type Squadron = {
   description: string;
 };
 
-export type Deployment = {
+export type Mission = {
   id: number;
+  acpId: number;
+  commanderId: string;
+  authCode: string;
   name: string;
-  description: string;
-  status: "active" | "inactive";
-  capacity: number;
-  missionCode: string;
-  missionName: string;
-  bannerUrl?: string;
-  bannerCldPubId?: string;
-  acp?: Acp;
+  description?: string;
+  status: "active" | "completed" | "aborted";
+  missionWindows?: MissionWindow[];
+  createdAt: string;
+  updatedAt: string;
+
+  // Joined Data (Optional, but useful for Refine tables)
   commander?: User;
-  squadron?: Squadron;
-  windows: MissionWindow[];
-  authCode?: string;
+  acp?: Acp;
 };
 
 export type SignUpPayload = {
