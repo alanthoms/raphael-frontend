@@ -31,27 +31,14 @@ export const missionSchema = Z.object({
   description: Z.string({
     required_error: "Mission objectives are required",
   }).min(5, "Objectives must be at least 5 characters"),
-  acpProfileId: Z.coerce
+  acpId: Z.coerce
     .number({
       required_error: "ACP model selection is required",
       invalid_type_error: "ACP model selection is required",
     })
     .min(1, "ACP model selection is required"),
   commanderId: Z.string().min(1, "Authorizing Commander is required"),
-  capacity: Z.coerce
-    .number({
-      required_error: "Unit capacity is required",
-      invalid_type_error: "Unit capacity is required",
-    })
-    .min(1, "Must assign at least 1 unit"),
   status: Z.enum(["active", "inactive"]),
-  bannerUrl: Z.string({
-    required_error: "Mission profile image is required",
-  }).min(1, "Mission profile image is required"),
-  bannerCldPubId: Z.string({ required_error: "Reference ID is required" }).min(
-    1,
-    "Reference ID is required",
-  ),
   authCode: Z.string().optional(),
   windows: Z.array(operationalWindowSchema).optional(),
 });

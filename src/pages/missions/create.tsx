@@ -101,7 +101,7 @@ const create = () => {
         </h1>
         <div className="flex flex-col gap-5 lg:flex-row justify-between">
           <p>Enter required mission details to create a new mission.</p>
-          <Button onClick={back}> Go Back</Button>
+          <Button onClick={() => back()}> Go Back</Button>
         </div>
         <Separator />
         <div className="my-4 flex items-center">
@@ -116,13 +116,6 @@ const create = () => {
             <CardContent className="mt-7 ">
               <Form {...form}>
                 <form onSubmit={handleSubmit(onSubmit)} className=" space-y-6">
-                  <div className="space-y-3">
-                    {" "}
-                    <Label>
-                      {" "}
-                      Banner Image <span className="text-orange-600">*</span>
-                    </Label>{" "}
-                  </div>
                   <FormField
                     control={control}
                     name="name"
@@ -144,11 +137,10 @@ const create = () => {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <FormField
                       control={control}
-                      name="acpProfileId"
+                      name="acpId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            {" "}
                             ACP <span className="text-orange-600">*</span>
                           </FormLabel>
                           <Select
