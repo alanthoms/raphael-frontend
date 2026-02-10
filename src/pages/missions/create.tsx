@@ -100,9 +100,6 @@ const Create = () => {
   const commanders = commandersQuery?.data?.data || [];
   const commandersLoading = commandersQuery?.isLoading;
 
-  const operators = operatorsQuery?.data?.data || [];
-  const operatorsLoading = operatorsQuery?.isLoading;
-
   return (
     <div>
       <CreateView className="container mx-auto pb-8 px-2 sm:px-4 ">

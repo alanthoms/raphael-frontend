@@ -24,18 +24,38 @@ export const ROLE_OPTIONS = [
   },
 ];
 
-export const SQUADRONS = [
-  "101st Reconnaissance Wing",
-  "502nd Electronic Strike Group",
-  "No. IX (Bomber) Squadron",
-  "V-SQUAD: Rapid Response",
-  "Maritime Guardian Unit",
+export const SQUADRON_OPTIONS = [
+  {
+    id: 5,
+    value: "101st Reconnaissance Wing",
+    label: "SQN-101: 101st Reconnaissance Wing",
+    code: "SQN-101",
+  },
+  {
+    id: 6,
+    value: "502nd Electronic Strike Group",
+    label: "SQN-502: 502nd Electronic Strike Group",
+    code: "SQN-502",
+  },
+  {
+    id: 7,
+    value: "No. IX (Bomber) Squadron",
+    label: "SQN-09: No. IX (Bomber) Squadron",
+    code: "SQN-09",
+  },
+  {
+    id: 8,
+    value: "V-SQUAD: Rapid Response",
+    label: "SQN-V: V-SQUAD: Rapid Response",
+    code: "SQN-V",
+  },
+  {
+    id: 9,
+    value: "Maritime Guardian Unit",
+    label: "SQN-SEA: Maritime Guardian Unit",
+    code: "SQN-SEA",
+  },
 ] as const;
-
-export const SQUADRON_OPTIONS = SQUADRONS.map((squadron) => ({
-  value: squadron,
-  label: squadron,
-}));
 
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const ALLOWED_TYPES = [
@@ -53,17 +73,12 @@ const getEnvVar = (key: string): string => {
   return value;
 };
 
-//export const CLOUDINARY_UPLOAD_URL = getEnvVar("VITE_CLOUDINARY_UPLOAD_URL");
-//export const CLOUDINARY_CLOUD_NAME = getEnvVar("VITE_CLOUDINARY_CLOUD_NAME");
 export const BACKEND_BASE_URL = getEnvVar("VITE_BACKEND_BASE_URL");
 
 export const BASE_URL = import.meta.env.VITE_API_URL;
 export const ACCESS_TOKEN_KEY = import.meta.env.VITE_ACCESS_TOKEN_KEY;
 export const REFRESH_TOKEN_KEY = import.meta.env.VITE_REFRESH_TOKEN_KEY;
 export const REFRESH_TOKEN_URL = `${BASE_URL}/refresh-token`;
-//export const CLOUDINARY_UPLOAD_PRESET = getEnvVar(
-//  "VITE_CLOUDINARY_UPLOAD_PRESET",
-//);
 
 export const acps = [
   {

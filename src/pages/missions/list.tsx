@@ -18,8 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ShowButton } from "@/components/refine-ui/buttons/show";
-import { useCustom, useGetIdentity, useList } from "@refinedev/core";
-import { BACKEND_BASE_URL } from "@/constants";
+import { useGetIdentity } from "@refinedev/core";
 
 const MissionsList = () => {
   const { data: user, isLoading: identityLoading } = useGetIdentity<{
@@ -36,17 +35,25 @@ const MissionsList = () => {
 const MissionsListContent = ({ user }: { user: any }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCommander, setSelectedCommander] = useState("all");
-
   const [commanders, setCommanders] = useState<any[]>([]);
+  const [isLoadingCommanders, setIsLoadingCommanders] = useState(true);
 
   React.useEffect(() => {
+    setIsLoadingCommanders(true);
     fetch("http://localhost:8000/api/users/commanders")
       .then((res) => res.json())
       .then((data) => {
-        console.log("✅ Fetched commanders:", data.data);
-        setCommanders(data.data);
+        console.log("✅ Fetched commanders:", data);
+        // Add safety check here
+        setCommanders(data?.data || []);
       })
-      .catch((err) => console.error("❌ Error:", err));
+      .catch((err) => {
+        console.error("❌ Error:", err);
+        setCommanders([]); // Set to empty array on error
+      })
+      .finally(() => {
+        setIsLoadingCommanders(false);
+      });
   }, []);
 
   const missionTable = useTable<Mission>({

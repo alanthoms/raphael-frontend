@@ -22,7 +22,6 @@ import MissionsShow from "./pages/missions/show.tsx";
 import Login from "./pages/login/index.tsx";
 import { authProvider } from "./providers/authProvider.ts";
 import Register from "./pages/register/index.tsx";
-import { text } from "stream/consumers";
 import { Shield, Radar, Command, Crosshair } from "lucide-react";
 
 function App() {

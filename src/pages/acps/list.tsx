@@ -113,10 +113,10 @@ const ACPsList = () => {
     <ListView>
       <Breadcrumb />
       <h1 className="text-3xl font-bold text-foreground tracking-tight">
-        APCs
+        ACPs
       </h1>
       <div className="flex flex-col gap-5 lg:flex-row justify-between">
-        <p> Quick access to APCs and related information</p>
+        <p> Quick access to ACPs and related information</p>
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-2 w-full">
           <div className="relative w-full max-h-9 md:max-w-72">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
