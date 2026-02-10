@@ -81,8 +81,8 @@ export const commanders = [
 ];
 
 export const COMMANDER_OPTIONS = commanders.map((commander) => ({
-  value: commander,
-  label: commander,
+  value: commander.id,
+  label: commander.name,
 }));
 export const acps = [
   {

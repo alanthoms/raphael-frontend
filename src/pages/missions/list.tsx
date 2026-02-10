@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { COMMANDER_OPTIONS } from "@/constants";
+import { ShowButton } from "@/components/refine-ui/buttons/show";
 
 const MissionsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,7 +66,7 @@ const MissionsList = () => {
         {
           id: "status",
           accessorKey: "status",
-          size: 150,
+          size: 50,
           header: () => (
             <p className="flex items-center gap-1 font-bold ml-2">Status</p>
           ),
@@ -76,12 +77,30 @@ const MissionsList = () => {
         {
           id: "commander",
           accessorKey: "commander.name",
-          size: 300,
+          size: 150,
           header: () => (
             <p className="flex items-center gap-1 font-bold ml-2">Commander</p>
           ),
           cell: ({ getValue }) => (
             <span className="truncate line-clamp-2">{getValue<string>()}</span>
+          ),
+        },
+
+        {
+          id: "details",
+          size: 140,
+          header: () => (
+            <p className="flex items-center gap-1 font-bold ml-2">Details</p>
+          ),
+          cell: ({ row }) => (
+            <ShowButton
+              resource="missions"
+              recordItemId={row.original.id}
+              variant="outline"
+              size="sm"
+            >
+              View
+            </ShowButton>
           ),
         },
       ],
@@ -127,6 +146,16 @@ const MissionsList = () => {
               <SelectTrigger>
                 <SelectValue placeholder="Filter by Squadron" />
               </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Commanders</SelectItem>
+                {COMMANDER_OPTIONS.map((commander) => (
+                  // 1. Ensure 'key' is a string/number (like id or value)
+                  // 2. Ensure the children is a string (like label or name)
+                  <SelectItem key={commander.value} value={commander.value}>
+                    {commander.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
             <CreateButton />
           </div>

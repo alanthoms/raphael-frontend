@@ -18,6 +18,7 @@ import ACPsList from "./pages/acps/list.tsx";
 import ACPsCreate from "./pages/acps/create.tsx";
 import MissionsList from "./pages/missions/list.tsx";
 import MissionsCreate from "./pages/missions/create.tsx";
+import MissionsShow from "./pages/missions/show.tsx";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
                   name: "missions",
                   list: "/missions",
                   create: "/missions/create",
+                  show: "/missions/show/:id",
                   meta: { label: "Missions", icon: <Target /> },
                 },
               ]}
@@ -70,6 +72,7 @@ function App() {
                   <Route path="missions">
                     <Route index element={<MissionsList />} />
                     <Route path="create" element={<MissionsCreate />} />
+                    <Route path="show/:id" element={<MissionsShow />} />
                   </Route>
                 </Route>
               </Routes>
