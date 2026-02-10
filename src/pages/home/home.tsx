@@ -154,6 +154,9 @@ const HomePage = () => {
           className="w-full md:h-[80%] h-1/2 absolute bottom-0 left-0 md:object-contain object-bottom object-cover;"
         />
       </div>
+      <footer className="relative z-10 py-6 text-center">
+        <p className="text-white/60 text-sm">© 2026 Alan Thomas</p>
+      </footer>
     </>
   );
 };
