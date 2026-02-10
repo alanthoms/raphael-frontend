@@ -65,25 +65,6 @@ export const REFRESH_TOKEN_URL = `${BASE_URL}/refresh-token`;
 //  "VITE_CLOUDINARY_UPLOAD_PRESET",
 //);
 
-export const commanders = [
-  {
-    id: "1",
-    name: "Wg Cdr Sarah Lyons",
-  },
-  {
-    id: "2",
-    name: "Sqn Ldr James ‘Ace’ Miller",
-  },
-  {
-    id: "3",
-    name: "Dr. Elena Rossi (Leonardo Engineering)",
-  },
-];
-
-export const COMMANDER_OPTIONS = commanders.map((commander) => ({
-  value: commander.id,
-  label: commander.name,
-}));
 export const acps = [
   {
     id: 1,

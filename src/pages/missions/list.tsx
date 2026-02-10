@@ -17,9 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { COMMANDER_OPTIONS } from "@/constants";
 import { ShowButton } from "@/components/refine-ui/buttons/show";
-import { useGetIdentity } from "@refinedev/core";
+import { useCustom, useGetIdentity, useList } from "@refinedev/core";
+import { BACKEND_BASE_URL } from "@/constants";
 
 const MissionsList = () => {
   const { data: user, isLoading: identityLoading } = useGetIdentity<{
@@ -36,6 +36,18 @@ const MissionsList = () => {
 const MissionsListContent = ({ user }: { user: any }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCommander, setSelectedCommander] = useState("all");
+
+  const [commanders, setCommanders] = useState<any[]>([]);
+
+  React.useEffect(() => {
+    fetch("http://localhost:8000/api/users/commanders")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("✅ Fetched commanders:", data.data);
+        setCommanders(data.data);
+      })
+      .catch((err) => console.error("❌ Error:", err));
+  }, []);
 
   const missionTable = useTable<Mission>({
     columns: useMemo<ColumnDef<Mission>[]>(
@@ -132,13 +144,14 @@ const MissionsListContent = ({ user }: { user: any }) => {
               onValueChange={setSelectedCommander}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Filter by Squadron" />
+                <SelectValue placeholder="Filter by Commander" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Commanders</SelectItem>
-                {COMMANDER_OPTIONS.map((commander) => (
-                  <SelectItem key={commander.value} value={commander.value}>
-                    {commander.label}
+                {/* CHANGE THIS LINE - use commanders instead of COMMANDER_OPTIONS */}
+                {commanders.map((commander: any) => (
+                  <SelectItem key={commander.id} value={commander.id}>
+                    {commander.name}
                   </SelectItem>
                 ))}
               </SelectContent>
