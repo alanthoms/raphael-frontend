@@ -22,6 +22,8 @@ import MissionsShow from "./pages/missions/show.tsx";
 import Login from "./pages/login/index.tsx";
 import { authProvider } from "./providers/authProvider.ts";
 import Register from "./pages/register/index.tsx";
+import { text } from "stream/consumers";
+import { Shield, Radar, Command, Crosshair } from "lucide-react";
 
 function App() {
   return (
@@ -38,6 +40,10 @@ function App() {
                 syncWithLocation: true,
                 warnWhenUnsavedChanges: true,
                 projectId: "qnsBO2-BQrujH-yNaLoL",
+                title: {
+                  text: "Raphael Dashboard",
+                  icon: <Radar className="w-6 h-6" />,
+                },
               }}
               resources={[
                 {

@@ -41,6 +41,7 @@ export const missionSchema = Z.object({
   status: Z.enum(["active", "inactive"]),
   authCode: Z.string().optional(),
   windows: Z.array(operationalWindowSchema).optional(),
+  operatorId: Z.string().optional(),
 });
 
 export const missionAssignmentSchema = Z.object({

@@ -1,7 +1,7 @@
 import { CreateView } from "@/components/refine-ui/views/create-view.tsx";
 import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { useBack, useList } from "@refinedev/core";
+import { useBack, useGetIdentity, useList } from "@refinedev/core";
 import { Separator } from "@/components/ui/separator.tsx";
 import {
   Card,
@@ -38,6 +38,8 @@ import { Acp, User } from "@/types";
 const Create = () => {
   const Back = useBack();
 
+  const { data: user } = useGetIdentity<{ id: string }>();
+
   const form = useForm({
     resolver: zodResolver(missionSchema),
     refineCoreProps: {
@@ -46,6 +48,8 @@ const Create = () => {
     },
     defaultValues: {
       status: "active",
+      commanderId: user?.id,
+      operatorId: "",
     },
   });
 
@@ -85,11 +89,19 @@ const Create = () => {
     },
   });
 
+  const { query: operatorsQuery } = useList<User>({
+    resource: "users",
+    filters: [{ field: "role", operator: "eq", value: "operator" }],
+  });
+
   const acps = acpsQuery?.data?.data || [];
   const acpsLoading = acpsQuery?.isLoading;
 
   const commanders = commandersQuery?.data?.data || [];
   const commandersLoading = commandersQuery?.isLoading;
+
+  const operators = operatorsQuery?.data?.data || [];
+  const operatorsLoading = operatorsQuery?.isLoading;
 
   return (
     <div>
@@ -198,39 +210,69 @@ const Create = () => {
                       )}
                     />
                   </div>
-                  <FormField
-                    control={control}
-                    name="commanderId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Commander <span className="text-orange-600">*</span>
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          disabled={commandersLoading}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select a commander" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {commanders.map((commander) => (
-                              <SelectItem
-                                key={commander.id}
-                                value={commander.id.toString()}
-                              >
-                                {commander.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <FormField
+                      control={control}
+                      name="commanderId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Commander <span className="text-orange-600">*</span>
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            disabled={commandersLoading}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a commander" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {commanders.map((commander) => (
+                                <SelectItem
+                                  key={commander.id}
+                                  value={commander.id.toString()}
+                                >
+                                  {commander.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={control}
+                      name="operatorId" // This collects the ID, but won't be saved in 'missions' table
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Assign Mission Operator</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select Operator" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {operatorsQuery?.data?.data.map((op) => (
+                                <SelectItem key={op.id} value={op.id}>
+                                  {op.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   {/* Description */}
                   <FormField
                     control={control}

@@ -19,57 +19,39 @@ import {
 } from "@/components/ui/select";
 import { COMMANDER_OPTIONS } from "@/constants";
 import { ShowButton } from "@/components/refine-ui/buttons/show";
+import { useGetIdentity } from "@refinedev/core";
 
 const MissionsList = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const { data: user, isLoading: identityLoading } = useGetIdentity<{
+    id: string;
+    role: "commander" | "operator";
+  }>();
 
+  if (identityLoading) return <div>Loading Command Data...</div>;
+  if (!user) return <div>Access Denied. Please log in.</div>;
+
+  return <MissionsListContent user={user} />;
+};
+
+const MissionsListContent = ({ user }: { user: any }) => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCommander, setSelectedCommander] = useState("all");
 
-  const commanderFilters =
-    selectedCommander === "all"
-      ? []
-      : [
-          {
-            field: "commander",
-            operator: "eq" as const,
-            value: selectedCommander,
-          },
-        ];
-
-  const searchFilters = searchQuery
-    ? [
-        {
-          field: "name",
-          operator: "contains" as const,
-          value: searchQuery,
-        },
-      ]
-    : [];
-
-  //use table hook from refine on top of react-table to get the table instance, tan stack packaage
   const missionTable = useTable<Mission>({
-    columns: useMemo<ColumnDef<Mission>[]>( // define columns for the table, useMemo to optimize performance by memoizing the column definitions
-      //memoize the column definitions to prevent unnecessary re-renders, only recompute when dependencies change
+    columns: useMemo<ColumnDef<Mission>[]>(
       () => [
         {
           id: "name",
           accessorKey: "name",
-          size: 200,
-          header: () => (
-            <p className="flex items-center gap-1 font-bold ml-2">Name</p>
-          ),
+          header: "Name",
           cell: ({ getValue }) => (
             <span className="text-foreground">{getValue<string>()}</span>
           ),
-          filterFn: "includesString",
         },
         {
           id: "status",
           accessorKey: "status",
-          size: 50,
-          header: () => (
-            <p className="flex items-center gap-1 font-bold ml-2">Status</p>
-          ),
+          header: "Status",
           cell: ({ getValue }) => (
             <Badge variant="secondary">{getValue<string>()}</Badge>
           ),
@@ -77,21 +59,17 @@ const MissionsList = () => {
         {
           id: "commander",
           accessorKey: "commander.name",
-          size: 150,
-          header: () => (
-            <p className="flex items-center gap-1 font-bold ml-2">Commander</p>
-          ),
-          cell: ({ getValue }) => (
-            <span className="truncate line-clamp-2">{getValue<string>()}</span>
-          ),
+          header: "Commander",
         },
-
+        {
+          id: "operator",
+          header: "Assigned Operator",
+          accessorKey: "operator.name",
+          cell: ({ getValue }) => getValue() || "Unassigned",
+        },
         {
           id: "details",
-          size: 140,
-          header: () => (
-            <p className="flex items-center gap-1 font-bold ml-2">Details</p>
-          ),
+          header: "Details",
           cell: ({ row }) => (
             <ShowButton
               resource="missions"
@@ -109,12 +87,24 @@ const MissionsList = () => {
     refineCoreProps: {
       resource: "missions",
       pagination: { pageSize: 10, mode: "server" },
-      filters: {
-        permanent: [...commanderFilters, ...searchFilters],
+      queryOptions: {
+        queryKey: [
+          "missions",
+          user?.id,
+          user?.role,
+          searchQuery,
+          selectedCommander,
+        ],
+      },
+      meta: {
+        operatorId: user?.role === "operator" ? user.id : undefined,
+        search: searchQuery || undefined,
+        commander: selectedCommander !== "all" ? selectedCommander : undefined,
       },
       sorters: {
         initial: [{ field: "id", order: "desc" }],
       },
+      syncWithLocation: true,
     },
   });
 
@@ -125,19 +115,17 @@ const MissionsList = () => {
         Missions
       </h1>
       <div className="flex flex-col gap-5 lg:flex-row justify-between">
-        <p> Quick access to Missions and related information</p>
+        <p>Quick access to Missions and related information</p>
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-2 w-full">
           <div className="relative w-full max-h-9 md:max-w-72">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
             <Input
-              type="text"
               placeholder="Search by name"
               className="pl-10 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-
           <div className="flex gap-2 w-full sm:w-auto">
             <Select
               value={selectedCommander}
@@ -149,15 +137,13 @@ const MissionsList = () => {
               <SelectContent>
                 <SelectItem value="all">All Commanders</SelectItem>
                 {COMMANDER_OPTIONS.map((commander) => (
-                  // 1. Ensure 'key' is a string/number (like id or value)
-                  // 2. Ensure the children is a string (like label or name)
                   <SelectItem key={commander.value} value={commander.value}>
                     {commander.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <CreateButton />
+            {user?.role === "commander" && <CreateButton />}
           </div>
         </div>
       </div>

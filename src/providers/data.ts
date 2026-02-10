@@ -26,12 +26,20 @@ const options: CreateDataProviderOptions = {
   getList: {
     getEndpoint: ({ resource }) => `${resource}`,
 
-    buildQueryParams: async ({ resource, pagination, filters }) => {
+    buildQueryParams: async ({ resource, pagination, filters, meta }) => {
       const page = pagination?.currentPage ?? 1;
       const pageSize = pagination?.pageSize ?? 10;
 
       const params: Record<string, string | number> = { page, limit: pageSize };
 
+      console.log("🔍 Meta received:", meta);
+
+      // Add meta params directly
+      if (meta?.operatorId) params.operatorId = meta.operatorId;
+      if (meta?.search) params.search = meta.search;
+      if (meta?.commander) params.commander = meta.commander;
+
+      // Keep the filter logic as backup
       filters?.forEach((filter) => {
         const field = "field" in filter ? filter.field : "";
         const value = String(filter.value);
@@ -45,8 +53,11 @@ const options: CreateDataProviderOptions = {
         if (resource === "missions") {
           if (field === "search" || field === "name") params.search = value;
           if (field === "commander") params.commander = value;
+          if (field === "operatorId") params.operatorId = value;
         }
       });
+
+      console.log("📤 Final params:", params);
       return params;
     },
 
@@ -54,7 +65,6 @@ const options: CreateDataProviderOptions = {
       if (!response.ok) {
         throw await buildHttpError(response);
       }
-      // Clone the response to avoid consuming it before the total count is extracted
       const payload: ListResponse = await response.clone().json();
       return payload.data ?? [];
     },
@@ -78,7 +88,6 @@ const options: CreateDataProviderOptions = {
     },
   },
 
-  //get details of any one resource
   getOne: {
     getEndpoint: ({ resource, id }) => `${resource}/${id}`,
 
