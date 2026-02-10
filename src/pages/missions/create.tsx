@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label.tsx";
 import {
   Select,
   SelectContent,
@@ -36,8 +35,8 @@ import { Textarea } from "@/components/ui/textarea.tsx";
 import { Loader2 } from "lucide-react";
 import { Acp, User } from "@/types";
 
-const create = () => {
-  const back = useBack();
+const Create = () => {
+  const Back = useBack();
 
   const form = useForm({
     resolver: zodResolver(missionSchema),
@@ -101,7 +100,7 @@ const create = () => {
         </h1>
         <div className="flex flex-col gap-5 lg:flex-row justify-between">
           <p>Enter required mission details to create a new mission.</p>
-          <Button onClick={() => back()}> Go Back</Button>
+          <Button onClick={() => Back()}> Go Back</Button>
         </div>
         <Separator />
         <div className="my-4 flex items-center">
@@ -274,4 +273,4 @@ const create = () => {
   );
 };
 
-export default create;
+export default Create;

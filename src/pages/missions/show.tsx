@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
-const show = () => {
+const Show = () => {
   const { query } = useShow<Mission>({ resource: "missions" });
 
   const missionDetails = query.data?.data;
@@ -34,7 +34,7 @@ const show = () => {
 
   const commanderName = missionDetails.commander?.name ?? "unknown";
 
-  const { name, description, status, createdAt, acp, acpId } = missionDetails;
+  const { name, description, status, createdAt, acp } = missionDetails;
 
   return (
     <ShowView className="container mx-auto pb-8 px-2 sm:px-4 ">
@@ -84,7 +84,7 @@ const show = () => {
             </p>
 
             <p className="text-xs mb-3 font-bold text-gray-100 uppercase tracking-wider;">
-              {acp.name}
+              {acp?.name ?? "NA"}
             </p>
           </div>
           <div>
@@ -104,4 +104,4 @@ const show = () => {
   );
 };
 
-export default show;
+export default Show;

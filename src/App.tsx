@@ -1,4 +1,4 @@
-import { Refine } from "@refinedev/core";
+import { Refine, Authenticated } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import Dashboard from "./pages/dashboard.tsx";
@@ -6,7 +6,7 @@ import routerProvider, {
   DocumentTitleHandler,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router";
+import { BrowserRouter, Outlet, Route, Routes, Navigate } from "react-router";
 import "./App.css";
 import { Toaster } from "./components/refine-ui/notification/toaster";
 import { useNotificationProvider } from "./components/refine-ui/notification/use-notification-provider";
@@ -19,6 +19,9 @@ import ACPsCreate from "./pages/acps/create.tsx";
 import MissionsList from "./pages/missions/list.tsx";
 import MissionsCreate from "./pages/missions/create.tsx";
 import MissionsShow from "./pages/missions/show.tsx";
+import Login from "./pages/login/index.tsx";
+import { authProvider } from "./providers/authProvider.ts";
+import Register from "./pages/register/index.tsx";
 
 function App() {
   return (
@@ -27,6 +30,7 @@ function App() {
         <ThemeProvider>
           <DevtoolsProvider>
             <Refine
+              authProvider={authProvider}
               dataProvider={dataProvider}
               notificationProvider={useNotificationProvider()}
               routerProvider={routerProvider}
@@ -59,9 +63,14 @@ function App() {
               <Routes>
                 <Route
                   element={
-                    <Layout>
-                      <Outlet />
-                    </Layout>
+                    <Authenticated
+                      key="protected"
+                      fallback={<Navigate to="/login" />}
+                    >
+                      <Layout>
+                        <Outlet />
+                      </Layout>
+                    </Authenticated>
                   }
                 >
                   <Route path="/" element={<Dashboard />} />
@@ -75,6 +84,9 @@ function App() {
                     <Route path="show/:id" element={<MissionsShow />} />
                   </Route>
                 </Route>
+
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
               </Routes>
               <Toaster />
               <RefineKbar />
