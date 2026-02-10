@@ -20,9 +20,12 @@ import MissionsList from "./pages/missions/list.tsx";
 import MissionsCreate from "./pages/missions/create.tsx";
 import MissionsShow from "./pages/missions/show.tsx";
 import Login from "./pages/login/index.tsx";
+import HomePage from "./pages/home/home.tsx";
 import { authProvider } from "./providers/authProvider.ts";
 import Register from "./pages/register/index.tsx";
-import { Shield, Radar, Command, Crosshair } from "lucide-react";
+import { Radar } from "lucide-react";
+
+import gsap from "gsap";
 
 function App() {
   return (
@@ -70,7 +73,7 @@ function App() {
                   element={
                     <Authenticated
                       key="protected"
-                      fallback={<Navigate to="/login" />}
+                      fallback={<Navigate to="/home" />}
                     >
                       <Layout>
                         <Outlet />
@@ -89,7 +92,7 @@ function App() {
                     <Route path="show/:id" element={<MissionsShow />} />
                   </Route>
                 </Route>
-
+                <Route path="/home" element={<HomePage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
               </Routes>

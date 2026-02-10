@@ -3,6 +3,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+.noisy {
+  @apply absolute inset-0 size-full bg-[url("../constants/images/noise.png")];
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50 antialiased;
@@ -182,4 +186,13 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+}
+
+html,
+body {
+  width: 100%;
+  background-color: black;
+  color: white;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
