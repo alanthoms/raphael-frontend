@@ -4,16 +4,15 @@ A role-based operations dashboard for managing ACPs, squadrons, and missions wit
 
 Backend Repo: https://github.com/alanthoms/raphael-backend
 
-Secure login + session handling (role-based access for Operator / Commander / Admin)
-View/manage ACP records (create, list, search, filter by squadron, paginate)
-View/manage missions (create, list, search, paginate)
-Guarded routes/components so UI only renders once identity/session is confirmed
+-Secure login + session handling (role-based access for Operator / Commander / Admin)
+-View/manage ACP records (create, list, search, filter by squadron, paginate)
+-View/manage missions (create, list, search, paginate)
+-Guarded routes/components so UI only renders once identity/session is confirmed
 
-Clean UI with form validation + notifications
-Refine (data + routing + auth integration)
-UI: shadcn/ui (or whatever you used)
-React Hook Form + Zod (form validation)
-Data provider talking to Express API
+-Refine (data + routing + auth integration)
+-UI: shadcn/ui + tailwind + GSAP
+-React Hook Form + Zod (form validation)
+-Data provider talking to Express API
 
 
 
